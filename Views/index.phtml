@@ -1,0 +1,63 @@
+<?php
+include 'includes/header.php';
+include 'includes/navbar.php';
+include 'includes/jumbo.php';
+include 'includes/slider.php';
+
+?>
+  
+  
+   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</section>
+<script type="text/javascript">
+  $(".addItemBtn").click(function(e) {
+    alert("click");
+    e.preventDefault();
+    var $form = $(this).closest(".submit-form");
+    var item_id = $form.find(".item_id").val();
+    var item_name = $form.find(".item_name").val();
+    var item_description = $form.find(".item_description").val();
+    var item_price = $form.find(".item_price").val();
+    var item_image = $form.find(".item_image").val();
+    var item_code = $form.find(".item_code").val();
+
+
+
+    $.ajax({
+      url: '<?php echo $directory ?>/public/ajax/action.php',
+      method: 'post',
+      data: {
+        item_id: item_id,
+        item_name: item_name,
+        item_price: item_price,
+        item_image: item_image,
+        item_code: item_code
+      },
+      success: function(response) {
+        $("#message").html(response);
+        window.scrollTo(0, 0);
+        load_cart_item_number();
+        set_cart_total_items();
+      }
+    });
+  });
+</script>
+<script type="text/javascript">
+  set_cart_total_items();
+
+  function set_cart_total_items() {
+    $.ajax({
+      url: '<?php echo $directory ?>/public/ajax/action.php',
+      method: 'get',
+      data: {
+        cartItem: "cart_item"
+      },
+      success: function(response) {
+        $("#cart-item").html(response);
+      }
+    });
+  }
+</script>
+<?php
+include 'includes/footer.php';

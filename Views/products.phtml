@@ -1,0 +1,89 @@
+<?php
+include 'includes/header.php';
+include 'includes/navbar.php';
+
+?>
+<section style="background-color: #eee;">
+ <div class="container py-5">
+   <div class="row">
+    <?php
+    while ($row = $products->fetch_assoc()):
+      ?>
+      <div class="col-md-12 col-lg-4 mb-4 mb-lg-0">
+        <div id="message"></div>
+        <div class="card">
+          <img src="<?php echo $directory ?>/admin/<?= $row['item_image'] ?>" class="card-img-top" alt="Product Image">
+          <div class="card-body">
+            <h5 class="card-title">Name: <?= $row['item_name'] ?></h5>
+            <p class="card-text">CODE: <?= $row['item_code'] ?></p>
+            <p class="card-text">PRICE: <?= $row['item_price'] ?></p>
+            <p class="card-text">Rating: 4.5 out of 5</p>
+            <form action="" class="submit-form">
+              <input type="hidden" class="item_id" value="<?= $row['item_id'] ?>">
+              <input type="hidden" class="item_name" value="<?= $row['item_name'] ?>">
+              <input type="hidden" class="item_description" value="<?= $row['item_description'] ?>">
+              <input type="hidden" class="item_price" value="<?= $row['item_price'] ?>">
+              <input type="hidden" class="item_image" value="<?= $row['item_image'] ?>">
+              <input type="hidden" class="item_code" value="<?= $row['item_code'] ?>">
+              <button class="btn btn-primary addItemBtn">Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <?php endwhile; ?>
+  </div>
+</div>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</section>
+<script type="text/javascript">
+  $(".addItemBtn").click(function(e) {
+    alert("Item Added into Cart");
+    e.preventDefault();
+    var $form = $(this).closest(".submit-form");
+    var item_id = $form.find(".item_id").val();
+    var item_name = $form.find(".item_name").val();
+    var item_description = $form.find(".item_description").val();
+    var item_price = $form.find(".item_price").val();
+    var item_image = $form.find(".item_image").val();
+    var item_code = $form.find(".item_code").val();
+
+
+
+    $.ajax({
+      url: '<?php echo $directory ?>/public/ajax/action.php',
+      method: 'post',
+      data: {
+        item_id: item_id,
+        item_name: item_name,
+        item_price: item_price,
+        item_image: item_image,
+        item_code: item_code
+      },
+      success: function(response) {
+        $("#message").html(response);
+        window.scrollTo(0, 0);
+        load_cart_item_number();
+        set_cart_total_items();
+      }
+    });
+  });
+</script>
+<script type="text/javascript">
+  set_cart_total_items();
+
+  function set_cart_total_items() {
+    $.ajax({
+      url: '<?php echo $directory ?>/public/ajax/action.php',
+      method: 'get',
+      data: {
+        cartItem: "cart_item"
+      },
+      success: function(response) {
+        $("#cart-item").html(response);
+      }
+    });
+  }
+</script>
+<?php
+include 'includes/footer.php';

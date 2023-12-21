@@ -1,0 +1,16 @@
+body {
+    background: #f4f4f4;
+}
+
+.teampic {
+    height: 200px !important;
+    width: 200px !important;
+}
+
+
+@media (max-width:768px) {
+    .teampic {
+        height: 150px !important;
+        width: 150px !important;
+    }
+}

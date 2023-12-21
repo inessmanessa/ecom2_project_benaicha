@@ -1,0 +1,72 @@
+<?php
+include 'includes/header.php';
+include 'includes/navbar.php';
+?>
+  <div class="container col-10">
+    <div id="message"></div>
+<div class="table-responsive mt-2">
+          <table class="table table-bordered table-striped text-center">
+            <thead>
+              <tr>
+                <td colspan="7">
+                  <h4 class="text-center text-danger m-0">Your Cart Items!</h4>
+                </td>
+              </tr>
+              <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Item</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (isset($_SESSION['cart'])): ?>
+                <?php
+                    $grand_total = 0;
+                    foreach ($_SESSION['cart'] as $key => $value):
+                ?>
+                <tr>
+                    <td><?= $value['id'] ?></td>
+                    <input type="hidden" class="pid" value="<?= $value['id'] ?>">
+                    <td><img src="<?php echo $directory ?>/admin/<?= $value['item_image'] ?>" width="50"></td>
+                    <td><?= $value['item_name'] ?></td>
+                    <td>
+                        <i class="fas fa-dollar-sign"></i>&nbsp;&nbsp;<?= number_format($value['item_price'],2); ?>
+                    </td>
+                    <input type="hidden" class="pprice" value="<?= $value['item_price'] ?>">
+                    <td>
+                        <input type="number" readonly class="form-control itemQty" value="<?= $value['qty'] ?>" style="width:75px;">
+                    </td>
+                    <td><i class="fas fa-dollar-sign"></i>&nbsp;&nbsp;<?= number_format($value['total_price'],2); ?></td>
+                    <td>
+                        <a href="<?php echo $directory ?>/public/ajax/action.php?remove=<?= $value['id'] ?>" class="text-danger lead" onclick="return confirm('Are you sure want to remove this item?');"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                <?php $grand_total += $value['total_price']; ?>
+                <?php endforeach; ?>
+                <tr>
+                    <td colspan="3">
+                        <a href="<?php echo $directory ?>/index.php" class="btn btn-success"><i class="fas fa-cart-plus"></i>&nbsp;&nbsp;Continue
+                            Shopping</a>
+                    </td>
+                    <td colspan="2"><b>Grand Total</b></td>
+                    <td><b><i class="fas fa-dollar-sign"></i>&nbsp;&nbsp;<?= number_format($grand_total,2); ?></b></td>
+                    <!-- <td>
+                        <a href="checkout.php" class="btn btn-info <?= ($grand_total > 1) ? '' : 'disabled'; ?>"><i class="far fa-credit-card"></i>&nbsp;&nbsp;Checkout</a>
+                    </td> -->
+                </tr>
+                <?php else: ?>
+                  Your CART IS EMPTY
+                <?php endif ?>
+            </tbody>
+
+
+          </table>
+        </div>
+  </div>
+
+<script type="text/javascript" src="js/index.js"></script>
+<?php
+include 'includes/footer.php';
